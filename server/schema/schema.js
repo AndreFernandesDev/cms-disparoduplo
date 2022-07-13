@@ -6,19 +6,20 @@ const {
 	GraphQLList,
 	GraphQLID,
 	GraphQLString,
-	GraphQLInt,
 	GraphQLEnumType,
 	GraphQLNonNull,
+	GraphQLFloat,
 } = require('graphql');
 
 // Album Type
 const AlbumType = new GraphQLObjectType({
-	name: 'Project',
+	name: 'Album',
 	fields: () => ({
 		id: { type: GraphQLID },
 		name: { type: GraphQLString },
-		date: { type: GraphQLInt },
+		date: { type: GraphQLFloat },
 		location: { type: GraphQLString },
+		description: { type: GraphQLString },
 	}),
 });
 
@@ -41,7 +42,6 @@ const MediaType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
 	name: 'RootQueryType',
 	fields: {
-		// - ALBUM - //
 		albums: {
 			type: new GraphQLList(AlbumType),
 			resolve(parent, args) {
@@ -55,7 +55,6 @@ const RootQuery = new GraphQLObjectType({
 				return Album.findById(args.id);
 			},
 		},
-		// Mutate
 	},
 });
 
@@ -67,16 +66,26 @@ const mutation = new GraphQLObjectType({
 			type: AlbumType,
 			args: {
 				name: { type: GraphQLNonNull(GraphQLString) },
-				date: { type: GraphQLNonNull(GraphQLInt) },
+				date: { type: GraphQLNonNull(GraphQLFloat) },
 				location: { type: GraphQLNonNull(GraphQLString) },
+				description: { type: GraphQLNonNull(GraphQLString) },
 			},
 			resolve(parent, args) {
 				const album = new Album({
 					name: args.name,
 					date: args.date,
 					location: args.location,
+					description: args.description,
 				});
 				return album.save();
+			},
+		},
+		// Remove album
+		deleteAlbum: {
+			type: AlbumType,
+			args: { id: { type: GraphQLID } },
+			resolve(parent, args) {
+				return Album.findByIdAndRemove(args.id);
 			},
 		},
 	},

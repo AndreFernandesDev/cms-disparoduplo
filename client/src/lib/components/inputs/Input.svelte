@@ -1,0 +1,28 @@
+<script lang="ts">
+    // Types of Input
+    import Text from '$lib/components/inputs/Text.svelte';
+	import Textarea from '$lib/components/inputs/Textarea.svelte';
+    import Date from '$lib/components/inputs/Date.svelte';
+    import File from '$lib/components/inputs/File.svelte';
+
+    export let type:string;
+    export let name:string;
+    export let label: string = "";
+    export let placeholder: string = "";
+    export let files:FileList = {};
+
+    export let handleChange = () => {};
+
+    
+</script>
+
+{#if type == "text"}
+    <Text name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
+{:else if type == "textarea"}
+    <Textarea name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
+{:else if type == "date"}
+    <Date name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
+{:else if type == "file"}
+    <File bind:files={files} name={name} label={label} handleChange={handleChange} />
+{/if}
+

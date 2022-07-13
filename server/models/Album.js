@@ -10,6 +10,9 @@ const AlbumSchema = new mongoose.Schema({
 	location: {
 		type: String,
 	},
+	description: {
+		type: String,
+	},
 });
 
 module.exports = mongoose.model('Album', AlbumSchema);
