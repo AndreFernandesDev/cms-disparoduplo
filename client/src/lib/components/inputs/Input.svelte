@@ -19,7 +19,7 @@
 {#if type == "text"}
     <Text name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
 {:else if type == "textarea"}
-    <Textarea name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
+    <Textarea name={name} placeholder={placeholder} handleChange={handleChange} />
 {:else if type == "date"}
     <Date name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
 {:else if type == "file"}

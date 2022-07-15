@@ -1,16 +1,25 @@
+
+
+
 <script lang="ts">
+	import { query, Query, fetchData } from "$lib/utilities/db";
+	import { onMount } from "svelte";
+
+	// Stores
+	import albums from '$lib/stores/albums';
+
+	// Components
 	import AlbumCard from '$lib/components/AlbumCard.svelte';
 	import Heading from '$lib/components/Heading.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { getContextClient, gql, queryStore } from "@urql/svelte";
-	import { query } from '$lib/graphql/albums'
-	
-	$: albums = queryStore({
-		client: getContextClient(),
-		query: query.all,
-	});
 
+	onMount(async () => {
+		const res = await fetchData(query(Query.all), {});
+		albums.set(res.data.albums)
+	});
 </script>
+
+
 
 <!-- FEATURED -->
 <!-- <section class="flex flex-wrap w-full justify-center my-12">
@@ -28,17 +37,12 @@
 <section class="flex flex-wrap w-full justify-center my-12">
 	<Heading type="h1">Albuns</Heading>
 	<div class="flex w-full flex-wrap justify-evenly items-stretch gap-6">
-		{#if $albums.fetching}
-			Loading...
-		{:else if $albums.error}
-			Oh no... {$albums.error.message}
-		{:else}
-			{#each $albums.data.albums as item}
-				<AlbumCard id={item.id} name={item.name} date={item.date} description={item.description}>
-					<Button type="Edit" id={item.id}>Editar</Button>
-					<Button type="Delete" id={item.id}>Apagar</Button>
-				</AlbumCard>
-			{/each}
-		{/if}
+		{#each $albums as { id, name, date, description }}
+			<AlbumCard id={id} name={name} date={date} description={description}>
+				<Button type="Edit" id={id}>Editar</Button>
+				<Button type="Delete" id={id}>Apagar</Button>
+			</AlbumCard>
+		{/each}
 	</div>
-</section>
+</section>	
+

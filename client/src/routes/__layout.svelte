@@ -1,12 +1,10 @@
 <script lang="ts">
 	import '../app.css';
+
+	// Components
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Footer from '$lib/components/Footer.svelte';
-	import { setContextClient, createClient } from "@urql/svelte";
 
-	setContextClient(createClient({
-		url: "http://localhost:5000/graphql"
-	}));
 </script>
 
 <Navbar />

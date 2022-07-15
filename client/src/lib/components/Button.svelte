@@ -2,20 +2,23 @@
 	export let type: string = 'Primary';
 	export let id: string = "";
 
-	import { mutationStore, getContextClient } from '@urql/svelte';
-	import { mutations } from '$lib/graphql/albums';
-	var client = getContextClient();
+	import { mutations, MutationTypes, MutationActions, fetchData } from "$lib/utilities/db";
 
-	$: handleDelete = (e) => {
-		e.preventDefault();
-		let query = mutationStore({
-			client: client,
-			query: mutations.delete,
-			variables: {
+	// Stores
+	import albums from '$lib/stores/albums';
+
+	$: handleDelete = async () => {
+		// API Parameters
+		const mutation = mutations(MutationTypes.album, MutationActions.delete)
+		const variables = {
 				id: id,
 			}
-		});
-		console.log(query);
+
+		const res = await fetchData(mutation, variables);
+
+		// Update internal data
+		const updatedAlbums = $albums.filter((item) => item.id !== id);
+		albums.set(updatedAlbums);
 	}
 </script>
 
@@ -28,7 +31,7 @@
 	</button>
 {:else if type === 'Delete'}
 	<button
-		on:click={handleDelete}
+		on:click|preventDefault={handleDelete}
 		type="button"
 		class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 	>

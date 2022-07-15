@@ -1,17 +1,31 @@
 <script lang="ts">
-	import { mutationStore, getContextClient } from '@urql/svelte';
-	import { mutations } from '$lib/graphql/albums';
-	import Input from '$lib/components/inputs/Input.svelte';
+	import { mutations, MutationTypes, MutationActions, fetchData } from "$lib/utilities/db";
 
-	var client = getContextClient();
+	// Stores
+	import albums from '$lib/stores/albums';
+
+	// Components
+	import Input from '$lib/components/inputs/Input.svelte';
+	
+
 	let isButtonEnabled = true;
+
+	interface PreviewFile {
+		file: File,
+		blurb: string,
+		name: string,
+
+	}
 
 	let form:HTMLFormElement;
 	let files:FileList;
-	let previewFiles = [];
+	let previewFiles:Array<PreviewFile> = [];
+	let featured = "";
 
 	$: {
-		console.log(previewFiles);
+		if(previewFiles.length) {
+			storeFeatured(previewFiles[0].name);
+		}
 	}
 
 	// Preview all media;
@@ -19,52 +33,77 @@
 		if(!files) return [];
 		previewFiles = [];
 
-		Object.keys(files).map((f) => {
+		Object.keys(files).forEach((f) => {
 			const currentFile = files[parseInt(f)];
-			console.log(currentFile);
 			const reader = new FileReader();
 			reader.readAsDataURL(currentFile);
 
 			reader.onload = e => {
-				previewFiles = [...previewFiles, e.target.result];
-				console.log(previewFiles);
+				previewFiles = [...previewFiles, {file: currentFile, blurb: String(e.target ? e.target.result : ""), name: currentFile.name}];
 			}
 		})
 	}
 
 	// Store images in Google Cloud.
-	const handleFiles = (e) => {
-		console.log(e);
+	const storeFileCloud = (file: PreviewFile) => {
+		// Do something here
+		return 'http://localhost:3000/sample.jpg'
 	}
 	
 
 	// Store images url in array.
-	const storeMedia = () => {
-		if(!files) return [];
-		Object.keys(files).map((f) => {
-			const currentFile = files[parseInt(f)];
-			console.log(currentFile);
-		})
+	const storeMediaData = async (albumId = "62d1419a1010d49ae08c755b") => {
+		if(!previewFiles) return [];
+		const mediaList = await Promise.all(previewFiles.map(async (file) => {
+			// Store in Cloud
+			const storagedFilePath = storeFileCloud(file);
+
+			// Store in Database
+			const mutation = mutations(MutationTypes.media, MutationActions.add)
+			const variables = {
+				featured: featured === file.name,
+				albumId: albumId,
+				name: file.name ? file.name : '',
+				type: "photo",
+				path: storagedFilePath,
+			}
+
+			const res = await fetchData(mutation, variables);
+			// console.log(res);
+
+			return res.data.addMedia;
+		}));
+		return mediaList;
 	}
 
+
 	// Store form in Database.
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		const formData = new FormData(form);
 		let json = Object.fromEntries(formData.entries());
-		let images = storeMedia()
 
-		// mutationStore({
-		// 	client: client,
-		// 	query: mutations.add,
-		// 	variables: {
-		// 		name: json.name,
-		// 		date: new Date(String(json.date)).valueOf(),
-		// 		location: json.location,
-		// 		description: json.description
-		// 	}
-		// });
+		// API Parameters
+		const mutation = mutations(MutationTypes.album, MutationActions.add)
+		const variables = {
+			name: json.name,
+			date: new Date(String(json.date)).valueOf(),
+			location: json.location,
+			description: json.description
+		}
+
+		const res = await fetchData(mutation, variables);
+		let newAlbum = res.data.addAlbum
+		let newMedia = await storeMediaData(newAlbum.id);
+
+		newAlbum = {...newAlbum, media: { ...newAlbum.media, ...newMedia} }
+
+		console.log(newAlbum);
+		albums.set([...$albums, newAlbum]);
+
 
 		form.reset();
+		previewFiles = [];
+		featured = "";
 	}
 
 	// Check if there are any missing fields.
@@ -76,7 +115,13 @@
 
 		isButtonEnabled = isEmpty;
 	}
+
+	// Record featured image
+	const storeFeatured = (imgName: string) => {
+		featured = imgName ? imgName : "";
+	}
 </script>
+
 <form bind:this={form} on:submit|preventDefault={handleSubmit} on:change={handleChange}>
 	<Input type="text" name="name" placeholder="Alexandre & Jessica..." />
 	<Input type="textarea" name="description" placeholder="Sobre o evento..." />
@@ -98,8 +143,12 @@
 	</div>
 </form>
 
-<div class="flex flex-wrap gap-4 items-center">
-	{#each previewFiles as media}
-		<img src={media} alt="Preview" class="w-5/8 h-40 object-contain b-2" />
+<div class="flex flex-wrap justify-between items-center">
+	{#each previewFiles as media, index}
+		{#if index === 0}
+			<img src={media.blurb} name={media.name} alt="Preview" class="pointer:hover w-1/2 h-40 object-contain border-2 {media.name == featured ? "border-blue-700" : "border-slate-200"} p-1" on:click={() => storeFeatured(media.name)}/>
+		{:else}
+			<img src={media.blurb} name={media.name} alt="Preview" class="pointer:hover w-1/2 h-40 object-contain border-2 {media.name == featured ? "border-blue-700" : "border-slate-200"} p-1" on:click={() => storeFeatured(media.name)}/>
+		{/if}
 	{/each}
 </div>

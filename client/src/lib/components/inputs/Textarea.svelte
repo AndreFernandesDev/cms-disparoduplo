@@ -1,6 +1,5 @@
 <script lang="ts">
     export let name:string;
-    export let label: string = "";
     export let placeholder: string = "";
 
     export let handleChange = () => {};
