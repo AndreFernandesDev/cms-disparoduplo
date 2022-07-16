@@ -7,6 +7,7 @@
 
     export let type:string;
     export let name:string;
+    export let value: string | number = "";
     export let label: string = "";
     export let placeholder: string = "";
     export let files:FileList = {};
@@ -17,11 +18,11 @@
 </script>
 
 {#if type == "text"}
-    <Text name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
+    <Text value={String(value)} name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
 {:else if type == "textarea"}
-    <Textarea name={name} placeholder={placeholder} handleChange={handleChange} />
+    <Textarea value={String(value)} name={name} placeholder={placeholder} handleChange={handleChange} />
 {:else if type == "date"}
-    <Date name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
+    <Date value={String(value)} name={name} label={label} placeholder={placeholder} handleChange={handleChange} />
 {:else if type == "file"}
     <File bind:files={files} name={name} label={label} handleChange={handleChange} />
 {/if}

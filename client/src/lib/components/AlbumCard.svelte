@@ -7,30 +7,16 @@
 	import { formatDate } from "$lib/utilities/utilities";
 </script>
 
-<div
-	class="w-4/12 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700"
->
+<div class="card w-1/7 mb-12 bg-base-100 shadow-xl 2xl:w-1/5">
 	<a href="album/{id}">
-		<img
-			class="rounded-t-lg h-64 w-full object-cover"
-			src="sample.jpg"
-			alt=""
-		/>
-	</a>
-	<div class="p-5">
-		<a href="album/{id}">
-			<h5
-				class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-			>
-				{name} | {formatDate(date)}
-			</h5>
-		</a>
-		<p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-			{description}
-		</p>
-
-		<div class="flex w-full justify-end">
-			<slot />
+		<figure><img src="https://placeimg.com/400/225/arch" class="w-full object-cover" alt="Shoes" /></figure>
+		<div class="card-body">
+			<h2 class="card-title">Shoes!</h2>
+			<p>{formatDate(date)}</p>
+			<p>{description.slice(0, 30)}{description.length > 30 ? "...": ""}</p>
+			<div class="card-actions justify-end">
+				<slot />
+			</div>
 		</div>
-	</div>
+	</a>
 </div>

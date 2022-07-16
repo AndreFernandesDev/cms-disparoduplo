@@ -5,7 +5,9 @@
 	import albums from '$lib/stores/albums';
 
 	// Components
+	import Heading from "./Heading.svelte";
 	import Input from '$lib/components/inputs/Input.svelte';
+	import Button from '$lib/components/Button.svelte';
 	
 
 	let isButtonEnabled = true;
@@ -95,7 +97,7 @@
 		let newAlbum = res.data.addAlbum
 		let newMedia = await storeMediaData(newAlbum.id);
 
-		newAlbum = {...newAlbum, media: { ...newAlbum.media, ...newMedia} }
+		newAlbum = {...newAlbum, media: [ ...newMedia ] }
 
 		console.log(newAlbum);
 		albums.set([...$albums, newAlbum]);
@@ -123,24 +125,14 @@
 </script>
 
 <form bind:this={form} on:submit|preventDefault={handleSubmit} on:change={handleChange}>
+	<Heading type="h2">New album</Heading>
 	<Input type="text" name="name" placeholder="Alexandre & Jessica..." />
 	<Input type="textarea" name="description" placeholder="Sobre o evento..." />
 	<Input type="text" name="location" placeholder="Madeira..." />
 	<Input type="date" name="date" placeholder="Dia do evento..." />
 	<Input handleChange={showFiles} bind:files={files} type="file" name="media" />
 
-	<div class="grid xl:grid-cols-2 xl:gap-6" />
-	<!-- Modal footer -->
-	<div
-		class="flex items-center py-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600"
-	>
-		<button
-			data-modal-toggle={"newAlbum"}
-			type="submit"
-			class="text-white {isButtonEnabled ? "bg-blue-400 cursor-not-allowed" : "bg-blue-700" } dark:bg-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center" disabled={isButtonEnabled}
-			>Salvar</button
-		>
-	</div>
+	<Button action="submit" extraClass={isButtonEnabled ? "btn-disabled" : ""}>Salvar</Button>
 </form>
 
 <div class="flex flex-wrap justify-between items-center">

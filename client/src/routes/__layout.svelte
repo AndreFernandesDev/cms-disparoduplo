@@ -8,7 +8,7 @@
 </script>
 
 <Navbar />
-<main class="container flex flex-wrap items-start content-start mx-auto">
+<main class="container mx-auto flex flex-wrap items-start grow">
 	<slot />
 </main>
 <Footer />

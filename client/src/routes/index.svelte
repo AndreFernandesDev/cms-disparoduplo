@@ -2,7 +2,7 @@
 
 
 <script lang="ts">
-	import { query, Query, fetchData } from "$lib/utilities/db";
+	import { mutations, MutationTypes, MutationActions, query, Query, fetchData } from "$lib/utilities/db";
 	import { onMount } from "svelte";
 
 	// Stores
@@ -17,6 +17,20 @@
 		const res = await fetchData(query(Query.all), {});
 		albums.set(res.data.albums)
 	});
+
+	$: handleDelete = async (id) => {
+		// API Parameters
+		const mutation = mutations(MutationTypes.album, MutationActions.delete)
+		const variables = {
+				id: id,
+			}
+
+		const res = await fetchData(mutation, variables);
+
+		// Update internal data
+		const updatedAlbums = $albums.filter((item) => item.id !== id);
+		albums.set(updatedAlbums);
+	}
 </script>
 
 
@@ -34,13 +48,13 @@
 </section> -->
 
 <!-- ALL ALBUMS -->
-<section class="flex flex-wrap w-full justify-center my-12">
-	<Heading type="h1">Albuns</Heading>
-	<div class="flex w-full flex-wrap justify-evenly items-stretch gap-6">
+<section class="flex flex-wrap w-full">
+	<Heading type="h1">All albums</Heading>
+	<div class="flex w-full flex-wrap justify-between mt-12">
 		{#each $albums as { id, name, date, description }}
 			<AlbumCard id={id} name={name} date={date} description={description}>
-				<Button type="Edit" id={id}>Editar</Button>
-				<Button type="Delete" id={id}>Apagar</Button>
+				<Button type="Edit" href="album/{id}">Editar</Button>
+				<Button onClick={() => handleDelete(id)} type="Delete">Apagar</Button>
 			</AlbumCard>
 		{/each}
 	</div>

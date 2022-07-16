@@ -1,0 +1,82 @@
+{
+  ".svelte-kit/build/index.js": {
+    "file": "index.js",
+    "src": ".svelte-kit/build/index.js",
+    "isEntry": true,
+    "imports": [
+      "_index-a408cf9c.js"
+    ],
+    "dynamicImports": [
+      ".svelte-kit/build/hooks.js"
+    ]
+  },
+  "src/routes/__layout.svelte": {
+    "file": "entries/pages/__layout.svelte.js",
+    "src": "src/routes/__layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-a408cf9c.js",
+      "_albums-dc610c70.js",
+      "_Input-6f2fe4e5.js"
+    ],
+    "css": [
+      "immutable/assets/entries/pages/__layout.svelte-a4a9e7e2.css"
+    ]
+  },
+  ".svelte-kit/runtime/components/error.svelte": {
+    "file": "entries/fallbacks/error.svelte.js",
+    "src": ".svelte-kit/runtime/components/error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-a408cf9c.js"
+    ]
+  },
+  "src/routes/album/[id].svelte": {
+    "file": "entries/pages/album/_id_.svelte.js",
+    "src": "src/routes/album/[id].svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-a408cf9c.js",
+      "_albums-dc610c70.js",
+      "_Heading-eec19c94.js",
+      "_Input-6f2fe4e5.js"
+    ]
+  },
+  "src/routes/index.svelte": {
+    "file": "entries/pages/index.svelte.js",
+    "src": "src/routes/index.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-a408cf9c.js",
+      "_albums-dc610c70.js",
+      "_Heading-eec19c94.js"
+    ]
+  },
+  "_index-a408cf9c.js": {
+    "file": "immutable/chunks/index-a408cf9c.js"
+  },
+  "_albums-dc610c70.js": {
+    "file": "immutable/chunks/albums-dc610c70.js",
+    "imports": [
+      "_index-a408cf9c.js"
+    ]
+  },
+  "_Input-6f2fe4e5.js": {
+    "file": "immutable/chunks/Input-6f2fe4e5.js",
+    "imports": [
+      "_index-a408cf9c.js"
+    ]
+  },
+  "_Heading-eec19c94.js": {
+    "file": "immutable/chunks/Heading-eec19c94.js",
+    "imports": [
+      "_index-a408cf9c.js",
+      "_albums-dc610c70.js"
+    ]
+  },
+  ".svelte-kit/build/hooks.js": {
+    "file": "immutable/chunks/hooks-d259abab.js",
+    "src": ".svelte-kit/build/hooks.js",
+    "isDynamicEntry": true
+  }
+}

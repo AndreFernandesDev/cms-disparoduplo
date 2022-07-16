@@ -5,10 +5,14 @@ const config = {
 	],
 
 	theme: {
-		extend: {},
+		extend: {
+			dropShadow: {
+				bottom: '0 4px 2px -2px rgba(0, 0, 0, 0.25)',
+			},
+		},
 	},
 
-	plugins: [require('flowbite/plugin')],
+	plugins: [require('flowbite/plugin'), require('daisyui')],
 	darkMode: 'class',
 };
 
