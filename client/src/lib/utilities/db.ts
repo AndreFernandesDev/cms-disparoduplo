@@ -80,6 +80,7 @@ export enum MutationTypes {
 export enum MutationActions {
 	add = 'add',
 	delete = 'delete',
+	update = 'update',
 }
 
 export const mutations = (type: MutationTypes, action: MutationActions) => {
@@ -111,6 +112,29 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 					deleteAlbum(id: $id) {
 						id
 						name
+					}
+				}
+			`,
+			update: `
+				mutation (
+					$id: ID!
+					$name: String!
+					$date: Float!
+					$location: String!
+					$description: String!
+				) {
+					updateAlbum(
+						id: $id
+						name: $name
+						date: $date
+						location: $location
+						description: $description
+					) {
+						id
+						name
+						date
+						location
+						description
 					}
 				}
 			`,

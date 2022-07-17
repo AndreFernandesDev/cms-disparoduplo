@@ -17,7 +17,7 @@
 {#if type === 'Primary'}
 	<button type={action} on:click={onClick} class="btn btn-primary {displaySettings} {extraClass}"><slot /></button>
 {:else if type === 'Delete'}
-	<button type={action} on:click={onClick} class="btn btn-error {displaySettings} {extraClass}"><slot /><Icons type="cross"/></button>
+	<button type={action} on:click|preventDefault={onClick} class="btn btn-error {displaySettings} {extraClass}"><slot /><Icons type="cross"/></button>
 {:else if type === 'Edit'}
 	<a href={href}><button type={action} on:click={onClick} class="btn btn-secondary {displaySettings} {extraClass}"><slot /><Icons type="edit"/></button></a>
 {:else if type === 'Popup'}

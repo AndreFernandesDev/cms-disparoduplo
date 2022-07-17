@@ -104,6 +104,21 @@ const mutation = new GraphQLObjectType({
 				return album.save();
 			},
 		},
+		updateAlbum: {
+			type: AlbumType,
+			args: {
+				id: { type: GraphQLID },
+				name: { type: GraphQLString },
+				date: { type: GraphQLFloat },
+				location: { type: GraphQLString },
+				description: { type: GraphQLString },
+			},
+			resolve(parent, args) {
+				const id = args.id;
+				delete args.id;
+				return Album.findByIdAndUpdate(id, args);
+			},
+		},
 		// Remove album
 		deleteAlbum: {
 			type: AlbumType,

@@ -3,7 +3,7 @@
 </script>
 
 {#if type == 'h1'}
-	<h1 class="text-3xl"><slot /></h1>
+	<h1 class="text-3xl py-2 pl-6 border-b-2 border-dashed border-primary"><slot /></h1>
 {:else if type == 'h2'}
 	<h2><slot /></h2>
 {:else if type == 'h3'}

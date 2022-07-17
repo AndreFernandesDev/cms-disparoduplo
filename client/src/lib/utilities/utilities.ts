@@ -1,69 +1,34 @@
 // Small scripts that may be used in general porpuses.
 
 // Requires timestamp
-export const formatDates = (timestamp: number) => {
-	if (!timestamp) return null;
-
-	// var date = new Date(timestamp * 1000);
-	// // Hours part from the timestamp
-	// var hours = date.getHours();
-	// // Minutes part from the timestamp
-	// var minutes = '0' + date.getMinutes();
-	// // Seconds part from the timestamp
-	// var seconds = '0' + date.getSeconds();
-
-	// // Will display time in 10:30:23 format
-	// var formattedTime =
-	// 	hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-
-	// return formattedTime;
-	// console.log(formattedTime);
+export const fromUnix = (timestamp: number, start = 'year', split = '-') => {
+	if (!timestamp) return '';
 
 	const date = new Date(timestamp * 1000);
-	let dateFormatted = '';
+	const dateDivider = date
+		.toLocaleDateString('en-GB', {
+			day: '2-digit',
+			month: '2-digit',
+			year: 'numeric',
+		})
+		.split('/');
 
-	let month = '' + date.getMonth();
-	let day = '' + date.getDay();
-	const year = '' + date.getFullYear();
+	const day = dateDivider[0];
+	const month = dateDivider[1];
+	const year = dateDivider[2];
 
-	if (month.length < 2) {
-		month = '0' + month;
-	}
-	if (day.length < 2) {
-		day = '0' + day;
-	}
-
-	dateFormatted = [day, month, year].join('-');
-
-	return dateFormatted;
+	if (start == 'day') return [day, month, year].join(split);
+	if (start == 'month') return [month, day, year].join(split);
+	if (start == 'year') return [year, month, day].join(split);
 };
 
-export const formatDate = (timestamp: number) => {
-	var a = new Date(timestamp * 1000);
-	var months = [
-		'Jan',
-		'Feb',
-		'Mar',
-		'Apr',
-		'May',
-		'Jun',
-		'Jul',
-		'Aug',
-		'Sep',
-		'Oct',
-		'Nov',
-		'Dec',
-	];
-	var year = a.getFullYear();
-	var month = months[a.getMonth()];
-	var date = a.getDate();
-	var hour = a.getHours();
-	var min = a.getMinutes();
-	var sec = a.getSeconds();
+export const toUnix = (dateString: string) => {
+	if (!dateString) return null;
 
-	var time =
-		date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
-	return time;
+	const date = new Date(dateString);
+	const unix = Math.floor(date.getTime() / 1000);
+
+	return unix;
 };
 
 export const isEqual = (obj1: object, obj2: object) => {

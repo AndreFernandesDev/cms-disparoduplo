@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { query, Query, fetchData } from "$lib/utilities/db";
-	import { isEqual } from "$lib/utilities/utilities";
+	import { mutations, MutationTypes, MutationActions, query, Query, fetchData } from "$lib/utilities/db";
+	import { isEqual, fromUnix, toUnix } from "$lib/utilities/utilities";
 	import { onMount } from 'svelte';
 
 	// Stores
@@ -19,10 +19,14 @@
 		[key: string]: any;
 	}
 
+	let form:HTMLFormElement;
 	const id = $page.params.id;
 	let displayUpdateBtn = false;
 	let initialAlbum = {};
-	let activeImg = {};
+	let activeImg = {
+		path: '',
+		name: ''
+	};
 	let album:Album = {
 		name: "",
 		description: "",
@@ -60,37 +64,53 @@
 		}
 	}
 
-	const handleUpdate = () => {
-		console.log(album);
-	}
 
-	const handleImagePreview = (path, name) => {
+	const handleImagePreview = (path: string, name: string) => {
 		activeImg = {
 			path: path,
 			name: name
 		}
 	}
 
+	const handleSubmit = async () => {
+		const formData = new FormData(form);
+		let json = Object.fromEntries(formData.entries());
+
+		// API Parameters
+		const mutation = mutations(MutationTypes.album, MutationActions.update)
+		const variables = {
+			id: id,
+			name: json.name,
+			date: toUnix(String(json.date)),
+			location: json.location,
+			description: json.description
+		}
+
+		const res = await fetchData(mutation, variables);
+
+		console.log(res);
+	}
 
 </script>
 
 {#if album}
-	<Button type="Popup" display={displayUpdateBtn} onClick={handleUpdate}>Atualizar</Button>
+
 	<!-- Settings -->
 	<section class="flex flex-wrap items-stretch w-full my-12">
-		<div class="flex flex-col w-2/5 pr-12">
-					<Heading type="h1">Definicoes</Heading>
-					<p class="my-2">Apos atualizar album, clique em "Atualizar".</p>
-		<form on:change={handleChange}>
-			<Input value={String(album.name)} type="text" name="name" placeholder="Alexandre & Jessica..." />
-			<Input value={String(album.description)} type="textarea" name="description" placeholder="Sobre o evento..." />
-			<Input value={album.location} type="text" name="location" placeholder="Madeira..." />
-			<Input value={album.date} type="date" name="date" placeholder="Dia do evento..." />
-		</form>
+		<div class="flex flex-col w-3/5 pr-12">
+			
+			<form bind:this={form} on:submit|preventDefault={handleSubmit} on:change={handleChange}>
+				<Input value={String(album.name)} type="text" name="name" placeholder="Nome..." />
+				<Input value={String(album.description)} type="textarea" name="description" placeholder="Sobre o evento..." />
+				<Input value={album.location} type="text" name="location" placeholder="Local..." />
+				<Input value={String(fromUnix(album.date))} type="date" name="date" placeholder="Dia do evento..." />
+				<Button action="submit" type="Popup" display={displayUpdateBtn}>Atualizar</Button>
+			</form>
 
 		</div>
-		<img src={album.featured.path} alt="" class="w-3/5 h-96 object-cover rounded-md" />
+		<img src={album.featured.path} alt="" class="w-2/5 h-96 object-cover rounded-md" />
 	</section>
+
 	<!-- Media -->
 	<section class="flex w-full gap-8">
 		{#if album.media && album.media.length}
