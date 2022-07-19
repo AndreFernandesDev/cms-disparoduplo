@@ -16,7 +16,6 @@
 		file: File,
 		blurb: string,
 		name: string,
-
 	}
 
 	let form:HTMLFormElement;
@@ -54,7 +53,7 @@
 	
 
 	// Store images url in array.
-	const storeMediaData = async (albumId = "62d1419a1010d49ae08c755b") => {
+	const storeMediaData = async (albumId: string) => {
 		if(!previewFiles) return [];
 		const mediaList = await Promise.all(previewFiles.map(async (file) => {
 			// Store in Cloud
@@ -66,7 +65,7 @@
 				featured: featured === file.name,
 				albumId: albumId,
 				name: file.name ? file.name : '',
-				type: "photo",
+				type: file.file.type,
 				path: storagedFilePath,
 			}
 
@@ -130,17 +129,17 @@
 	<Input type="textarea" name="description" placeholder="Sobre o evento..." />
 	<Input type="text" name="location" placeholder="Madeira..." />
 	<Input type="date" name="date" placeholder="Dia do evento..." />
-	<Input handleChange={showFiles} bind:files={files} type="file" name="media" />
+	<Input onChange={showFiles} bind:files={files} type="file" name="media" />
 
 	<Button action="submit" extraClass={isButtonEnabled ? "btn-disabled" : ""}>Salvar</Button>
 </form>
 
-<div class="flex flex-wrap justify-between items-center">
+<div class="flex flex-wrap justify-between items-center mt-12">
 	{#each previewFiles as media, index}
 		{#if index === 0}
-			<img src={media.blurb} name={media.name} alt="Preview" class="pointer:hover w-1/2 h-40 object-contain border-2 {media.name == featured ? "border-blue-700" : "border-slate-200"} p-1" on:click={() => storeFeatured(media.name)}/>
+			<img src={media.blurb} name={media.name} alt="Preview" class="pointer:hover w-1/2 h-40 object-contain border-2 rounded-lg {media.name == featured ? "border-primary" : "border-slate-200"} p-1" on:click={() => storeFeatured(media.name)}/>
 		{:else}
-			<img src={media.blurb} name={media.name} alt="Preview" class="pointer:hover w-1/2 h-40 object-contain border-2 {media.name == featured ? "border-blue-700" : "border-slate-200"} p-1" on:click={() => storeFeatured(media.name)}/>
+			<img src={media.blurb} name={media.name} alt="Preview" class="pointer:hover w-1/2 h-40 object-contain border-2 rounded-lg {media.name == featured ? "border-primary" : "border-slate-200"} p-1" on:click={() => storeFeatured(media.name)}/>
 		{/if}
 	{/each}
 </div>

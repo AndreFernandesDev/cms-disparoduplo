@@ -3,11 +3,11 @@
     export let value: string = "";
     export let placeholder: string = "";
 
-    export let handleChange = () => {};
+    export let onChange = () => {};
 </script>
 <div class="relative z-0 w-full my-4 group">
     <textarea
-        on:change={handleChange}
+        on:change={onChange}
         id={name}
         name={name}
         rows="4"

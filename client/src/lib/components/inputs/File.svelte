@@ -2,7 +2,7 @@
     export let name:string;
     export let label = "";
     export let files:FileList;
-    export let handleChange = () => {};
+    export let onChange = () => {};
 
 </script>
 
@@ -20,6 +20,6 @@
         type="file"
         multiple
         bind:files={files}
-        on:change={handleChange}
+        on:change={onChange}
     />
 </div>

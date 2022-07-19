@@ -7,8 +7,10 @@
 
 </script>
 
-<Navbar />
-<main class="container mx-auto flex flex-wrap items-start grow">
-	<slot />
-</main>
+<div class="container mx-auto">
+	<Navbar />
+	<main class="flex flex-wrap items-start grow">
+		<slot />
+	</main>
+</div>
 <Footer />

@@ -124,6 +124,7 @@ const mutation = new GraphQLObjectType({
 			type: AlbumType,
 			args: { id: { type: GraphQLID } },
 			resolve(parent, args) {
+				Media.find({ albumId: args.id }).remove().exec();
 				return Album.findByIdAndRemove(args.id);
 			},
 		},
@@ -148,12 +149,23 @@ const mutation = new GraphQLObjectType({
 				return album.save();
 			},
 		},
-		// Remove album
+		// Remove media
 		deleteMedia: {
-			type: AlbumType,
+			type: MediaType,
 			args: { id: { type: GraphQLID } },
 			resolve(parent, args) {
-				return Album.findByIdAndRemove(args.id);
+				return Media.findByIdAndRemove(args.id);
+			},
+		},
+		updateMedia: {
+			type: MediaType,
+			args: {
+				id: { type: GraphQLID },
+				oldFeaturedId: { type: GraphQLID },
+			},
+			resolve: async (parent, args) => {
+				await Media.findByIdAndUpdate(args.oldFeaturedId, { featured: false });
+				return await Media.findByIdAndUpdate(args.id, { featured: true });
 			},
 		},
 	},

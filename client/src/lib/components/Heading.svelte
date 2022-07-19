@@ -3,7 +3,9 @@
 </script>
 
 {#if type == 'h1'}
-	<h1 class="text-3xl py-2 pl-6 border-b-2 border-dashed border-primary"><slot /></h1>
+	<div class="flex w-full mt-12 mb-6">
+		<h1 class="text-3xl py-2 pl-6 border-b-2 border-dashed border-primary"><slot /></h1>
+	</div>
 {:else if type == 'h2'}
 	<h2><slot /></h2>
 {:else if type == 'h3'}

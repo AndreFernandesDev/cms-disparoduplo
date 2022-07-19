@@ -33,7 +33,9 @@
 	}
 </script>
 
-
+<svelte:head>
+	<title>Disparo Duplo | Admin Panel</title>
+</svelte:head>
 
 <!-- FEATURED -->
 <!-- <section class="flex flex-wrap w-full justify-center my-12">
@@ -50,7 +52,7 @@
 <!-- ALL ALBUMS -->
 <section class="flex flex-wrap w-full">
 	<Heading type="h1">All albums</Heading>
-	<div class="flex w-full flex-wrap justify-between mt-12">
+	<div class="flex w-full flex-wrap gap-6">
 		{#each $albums as { id, name, date, description }}
 			<AlbumCard id={id} name={name} date={date} description={description}>
 				<Button type="Edit" href="album/{id}">Editar</Button>

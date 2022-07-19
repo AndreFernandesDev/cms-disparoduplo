@@ -41,9 +41,11 @@ export const query = (type: Query, props: QueryProps = {}) => {
 					location
 					description
 					featured {
+						id
 						path
 					}
 					media {
+						id
 						name
 						type
 						path
@@ -61,6 +63,7 @@ export const query = (type: Query, props: QueryProps = {}) => {
 					location
 					description
 					featured {
+						id
 						path
 					}
 				}
@@ -155,6 +158,7 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 						type: $type
 						path: $path
 					) {
+						id
 						name
 						type
 						path
@@ -164,9 +168,22 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 			`,
 			delete: `
 				mutation ($id: ID!) {
-					deleteAlbum(id: $id) {
+					deleteMedia(id: $id) {
 						id
 						name
+					}
+				}
+			`,
+			update: `
+				mutation (
+					$id: ID!
+					$oldFeaturedId: ID!
+				) {
+					updateMedia(
+						id: $id
+						oldFeaturedId: $oldFeaturedId
+					) {
+						id
 					}
 				}
 			`,
