@@ -1,4 +1,4 @@
-const url = 'http://localhost:5000/graphql';
+const url = 'https://disparoduplo-cms-jxq6jwbz6a-nw.a.run.app/graphql';
 
 const config = (query: string, variables: object) => {
 	return {
