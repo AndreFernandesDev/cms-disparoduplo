@@ -3,13 +3,14 @@
 	export let date: number;
 	export let description: string;
 	export let id: string;
+	export let image: string;
 
 	import { fromUnix } from "$lib/utilities/utilities";
 </script>
 
-<div class="card w-1/7 mb-12 bg-base-100 shadow-xl">
-	<a href="album/{id}">
-		<figure><img src="https://placeimg.com/400/225/arch" class="w-full object-cover" alt="Shoes" /></figure>
+<div class="card bg-base-100 shadow-xl">
+	<a class="w-full" href="album/{id}">
+		<figure class="w-full"><img src={image} class="w-full h-56 object-cover" alt="Shoes" /></figure>
 		<div class="card-body">
 			<h2 class="card-title">{name} | {fromUnix(date, "day", "-")}</h2>
 			<p>{description.slice(0, 30)}{description.length > 30 ? "...": ""}</p>

@@ -45,6 +45,7 @@
 		"@graphql-codegen/typescript-operations": "^2.5.1",
 		"@sveltestack/svelte-query": "^1.6.0",
 		"@urql/svelte": "^2.0.2",
+		"axios": "^0.27.2",
 		"daisyui": "^2.19.0",
 		"flowbite": "^1.4.7",
 		"graphql": "^16.5.0"

@@ -27,7 +27,7 @@
 	let form:HTMLFormElement;
 	let files:FileList;
 	const id = $page.params.id;
-	let toDeleteMedia:Array<String> = [];
+	let toDeleteMedia:Media = [];
 	let toFeaturedMedia = {id: "", oldFeaturedId: ""};
 	let displayUpdateBtn = false;
 	let initialAlbum = {};
@@ -95,7 +95,8 @@
 			name: json.name,
 			date: toUnix(String(json.date)),
 			location: json.location,
-			description: json.description
+			description: json.description,
+			password: json.password
 		}
 
 		const res = await fetchData(mutation, variables);
@@ -129,11 +130,11 @@
 
 	}
 
-	const handleDelete = async (id: string) => {
+	const handleDelete = async (id: string, path: string) => {
 		if(!id) return null;
 		
 		album.media = album.media.filter((media: Media) => media.id !== id);
-		toDeleteMedia.push(id);
+		toDeleteMedia.push({id: id, path: path });
 		showUpdateBtn()
 	}
 
@@ -180,11 +181,12 @@
 		<Heading type="h1">Alterar album</Heading>
 		<!-- FORM -->
 		<div class="flex flex-col w-3/5 pr-12">
-				<Input value={String(album.name)} type="text" name="name" placeholder="Nome..." />
-				<Input value={String(album.description)} type="textarea" name="description" placeholder="Sobre o evento..." />
-				<Input value={album.location} type="text" name="location" placeholder="Local..." />
-				<Input value={String(fromUnix(album.date))} type="date" name="date" placeholder="Dia do evento..." />
-				<Button action="submit" type="Popup" display={displayUpdateBtn}>Atualizar</Button>
+			<Input value={String(album.name)} type="text" name="name" placeholder="Nome..." />
+			<Input value={String(album.password)} type="text" name="password" placeholder="Senha..." />
+			<Input value={String(album.description)} type="textarea" name="description" placeholder="Sobre o evento..." />
+			<Input value={album.location} type="text" name="location" placeholder="Local..." />
+			<Input value={String(fromUnix(album.date))} type="date" name="date" placeholder="Dia do evento..." />
+			<Button action="submit" type="Popup" display={displayUpdateBtn}>Atualizar</Button>
 		</div>
 		<!-- FEATURED IMAGE -->
 		<img src={album.featured.path} alt="" class="w-2/5 h-96 object-cover rounded-md" />
@@ -200,10 +202,10 @@
 			<Modal type="click" id="fullImg" extraClass="bg-black">
 				<img for="my-modal" src={activeImg.path} alt={activeImg.name} class="modal-button w-full h-full object-contain rounded-md"/>
 			</Modal>
-			<Image modalId="fullImg" onClickDelete={() => handleDelete(album.featured.id)} onClick={() => handleImagePreview(album.featured.path, album.featured.name)} featured={true} path={album.featured.path} name={album.featured.name} />
+			<Image modalId="fullImg" onClickDelete={() => handleDelete(album.featured.id, album.featured.path)} onClick={() => handleImagePreview(album.featured.path, album.featured.name)} featured={true} path={album.featured.path} name={album.featured.name} />
 			{#each album.media as file}
 				{#if file.featured === false}
-					<Image modalId="fullImg" onClickFeatured={() => handleFeatured(file.id, file.path)} onClickDelete={() => handleDelete(file.id)} onClick={() => handleImagePreview(file.path, file.name)} featured={false} path={file.path} name={file.name} />
+					<Image modalId="fullImg" onClickFeatured={() => handleFeatured(file.id, file.path)} onClickDelete={() => handleDelete(file.id, file.path)} onClick={() => handleImagePreview(file.path, file.name)} featured={false} path={file.path} name={file.name} />
 				{/if}
 			{/each}
 		{/if}

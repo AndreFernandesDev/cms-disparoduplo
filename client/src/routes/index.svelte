@@ -37,24 +37,12 @@
 	<title>Disparo Duplo | Admin Panel</title>
 </svelte:head>
 
-<!-- FEATURED -->
-<!-- <section class="flex flex-wrap w-full justify-center my-12">
-	<Heading type="h1">Featureds</Heading>
-	<div class="w-full flex flex-wrap justify-evenly items-stretch gap-6">
-		{#each featured as item}
-			<AlbumCard name={item} date={item}>
-				<Button type="Edit">Editar</Button>
-			</AlbumCard>
-		{/each}
-	</div>
-</section> -->
-
 <!-- ALL ALBUMS -->
 <section class="flex flex-wrap w-full">
 	<Heading type="h1">All albums</Heading>
-	<div class="flex w-full flex-wrap gap-6">
-		{#each $albums as { id, name, date, description }}
-			<AlbumCard id={id} name={name} date={date} description={description}>
+	<div class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid gap-4 mb-6">
+		{#each $albums as { id, name, date, description, featured }}
+			<AlbumCard image={featured.path} id={id} name={name} date={date} description={description}>
 				<Button type="Edit" href="album/{id}">Editar</Button>
 				<Button onClick={() => handleDelete(id)} type="Delete">Apagar</Button>
 			</AlbumCard>

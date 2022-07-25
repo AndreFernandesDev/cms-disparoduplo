@@ -8,6 +8,8 @@
 	import Heading from "./Heading.svelte";
 	import Input from '$lib/components/inputs/Input.svelte';
 	import Button from '$lib/components/Button.svelte';
+import { storeMediaData } from "$lib/utilities/manageMedia";
+import { toUnix } from "$lib/utilities/utilities";
 	
 
 	let isButtonEnabled = true;
@@ -45,39 +47,6 @@
 		})
 	}
 
-	// Store images in Google Cloud.
-	const storeFileCloud = (file: PreviewFile) => {
-		// Do something here
-		return 'http://localhost:3000/sample.jpg'
-	}
-	
-
-	// Store images url in array.
-	const storeMediaData = async (albumId: string) => {
-		if(!previewFiles) return [];
-		const mediaList = await Promise.all(previewFiles.map(async (file) => {
-			// Store in Cloud
-			const storagedFilePath = storeFileCloud(file);
-
-			// Store in Database
-			const mutation = mutations(MutationTypes.media, MutationActions.add)
-			const variables = {
-				featured: featured === file.name,
-				albumId: albumId,
-				name: file.name ? file.name : '',
-				type: file.file.type,
-				path: storagedFilePath,
-			}
-
-			const res = await fetchData(mutation, variables);
-			// console.log(res);
-
-			return res.data.addMedia;
-		}));
-		return mediaList;
-	}
-
-
 	// Store form in Database.
 	const handleSubmit = async () => {
 		const formData = new FormData(form);
@@ -87,18 +56,19 @@
 		const mutation = mutations(MutationTypes.album, MutationActions.add)
 		const variables = {
 			name: json.name,
-			date: new Date(String(json.date)).valueOf(),
+			date: toUnix(String(json.date)),
 			location: json.location,
-			description: json.description
+			description: json.description,
+			password: json.password
 		}
 
 		const res = await fetchData(mutation, variables);
 		let newAlbum = res.data.addAlbum
-		let newMedia = await storeMediaData(newAlbum.id);
+		let newMedia = await storeMediaData(newAlbum.id, files, featured);
+		const featuredMedia = newMedia.filter((item) => item.featured === true)[0];
+		
+		newAlbum = {...newAlbum, media: [ ...newMedia ], featured: {id: featuredMedia.id, path: featuredMedia.path} }
 
-		newAlbum = {...newAlbum, media: [ ...newMedia ] }
-
-		console.log(newAlbum);
 		albums.set([...$albums, newAlbum]);
 
 
@@ -125,7 +95,8 @@
 
 <form bind:this={form} on:submit|preventDefault={handleSubmit} on:change={handleChange}>
 	<Heading type="h2">New album</Heading>
-	<Input type="text" name="name" placeholder="Alexandre & Jessica..." />
+	<Input type="text" name="name" placeholder="Nome do evento..." />
+	<Input type="text" name="password" placeholder="Senha..." />
 	<Input type="textarea" name="description" placeholder="Sobre o evento..." />
 	<Input type="text" name="location" placeholder="Madeira..." />
 	<Input type="date" name="date" placeholder="Dia do evento..." />

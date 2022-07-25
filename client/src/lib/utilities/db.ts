@@ -39,6 +39,7 @@ export const query = (type: Query, props: QueryProps = {}) => {
 					name
 					date
 					location
+					password
 					description
 					featured {
 						id
@@ -95,18 +96,21 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 					$date: Float!
 					$location: String!
 					$description: String!
+					$password: String!
 				) {
 					addAlbum(
 						name: $name
 						date: $date
 						location: $location
 						description: $description
+						password: $password
 					) {
 						id
 						name
 						date
 						location
 						description
+						password
 					}
 				}
 			`,
@@ -125,6 +129,7 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 					$date: Float!
 					$location: String!
 					$description: String!
+					$password: String!
 				) {
 					updateAlbum(
 						id: $id
@@ -132,12 +137,14 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 						date: $date
 						location: $location
 						description: $description
+						password: $password
 					) {
 						id
 						name
 						date
 						location
 						description
+						password
 					}
 				}
 			`,
