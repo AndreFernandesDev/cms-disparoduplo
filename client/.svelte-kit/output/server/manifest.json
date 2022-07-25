@@ -4,7 +4,7 @@
     "src": ".svelte-kit/build/index.js",
     "isEntry": true,
     "imports": [
-      "_index-a408cf9c.js"
+      "_index-eeb80438.js"
     ],
     "dynamicImports": [
       ".svelte-kit/build/hooks.js"
@@ -15,12 +15,12 @@
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "imports": [
-      "_index-a408cf9c.js",
-      "_albums-dc610c70.js",
-      "_Input-6f2fe4e5.js"
+      "_index-eeb80438.js",
+      "_Button-dc786067.js",
+      "_Input-ab6f7ba1.js"
     ],
     "css": [
-      "immutable/assets/entries/pages/__layout.svelte-a4a9e7e2.css"
+      "immutable/assets/entries/pages/__layout.svelte-c510e53c.css"
     ]
   },
   ".svelte-kit/runtime/components/error.svelte": {
@@ -28,7 +28,7 @@
     "src": ".svelte-kit/runtime/components/error.svelte",
     "isEntry": true,
     "imports": [
-      "_index-a408cf9c.js"
+      "_index-eeb80438.js"
     ]
   },
   "src/routes/album/[id].svelte": {
@@ -36,10 +36,10 @@
     "src": "src/routes/album/[id].svelte",
     "isEntry": true,
     "imports": [
-      "_index-a408cf9c.js",
-      "_albums-dc610c70.js",
-      "_Heading-eec19c94.js",
-      "_Input-6f2fe4e5.js"
+      "_index-eeb80438.js",
+      "_utilities-edd6063c.js",
+      "_Button-dc786067.js",
+      "_Input-ab6f7ba1.js"
     ]
   },
   "src/routes/index.svelte": {
@@ -47,32 +47,29 @@
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "imports": [
-      "_index-a408cf9c.js",
-      "_albums-dc610c70.js",
-      "_Heading-eec19c94.js"
+      "_index-eeb80438.js",
+      "_Button-dc786067.js",
+      "_utilities-edd6063c.js"
     ]
   },
-  "_index-a408cf9c.js": {
-    "file": "immutable/chunks/index-a408cf9c.js"
+  "_index-eeb80438.js": {
+    "file": "immutable/chunks/index-eeb80438.js"
   },
-  "_albums-dc610c70.js": {
-    "file": "immutable/chunks/albums-dc610c70.js",
+  "_Input-ab6f7ba1.js": {
+    "file": "immutable/chunks/Input-ab6f7ba1.js",
     "imports": [
-      "_index-a408cf9c.js"
+      "_index-eeb80438.js",
+      "_Button-dc786067.js"
     ]
   },
-  "_Input-6f2fe4e5.js": {
-    "file": "immutable/chunks/Input-6f2fe4e5.js",
+  "_Button-dc786067.js": {
+    "file": "immutable/chunks/Button-dc786067.js",
     "imports": [
-      "_index-a408cf9c.js"
+      "_index-eeb80438.js"
     ]
   },
-  "_Heading-eec19c94.js": {
-    "file": "immutable/chunks/Heading-eec19c94.js",
-    "imports": [
-      "_index-a408cf9c.js",
-      "_albums-dc610c70.js"
-    ]
+  "_utilities-edd6063c.js": {
+    "file": "immutable/chunks/utilities-edd6063c.js"
   },
   ".svelte-kit/build/hooks.js": {
     "file": "immutable/chunks/hooks-d259abab.js",

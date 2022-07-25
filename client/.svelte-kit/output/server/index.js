@@ -1,4 +1,4 @@
-import { c as create_ssr_component, s as setContext, v as validate_component, m as missing_component } from "./immutable/chunks/index-a408cf9c.js";
+import { c as create_ssr_component, s as setContext, v as validate_component, m as missing_component } from "./immutable/chunks/index-eeb80438.js";
 function afterUpdate() {
 }
 const Root = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -2299,7 +2299,7 @@ function set_paths(paths) {
 }
 function set_prerendering(value) {
 }
-const template = ({ head, body, assets: assets2, nonce }) => '<!DOCTYPE html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="' + assets2 + '/favicon.png" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		' + head + '\n	</head>\n	<body>\n		<div class="flex flex-col justify-between min-h-screen">\n			' + body + '\n		</div>\n		<script src="../node_modules/flowbite/dist/flowbite.js"><\/script>\n		<script src="../node_modules/flowbite/dist/datepicker.js"><\/script>\n	</body>\n</html>\n';
+const template = ({ head, body, assets: assets2, nonce }) => '<!DOCTYPE html>\n<html data-theme="cupcake" lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="' + assets2 + '/favicon.png" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		' + head + '\n	</head>\n	<body>\n		<div class="flex flex-col justify-between min-h-screen">\n			' + body + '\n		</div>\n		<script src="../node_modules/flowbite/dist/flowbite.js"><\/script>\n		<script src="../node_modules/flowbite/dist/datepicker.js"><\/script>\n	</body>\n</html>\n';
 let read = null;
 set_paths({ "base": "", "assets": "" });
 let default_protocol = "https";

@@ -4,7 +4,7 @@ import { respond } from '/home/ospinhas/Desktop/WORK/ALGARVE/FARO/DisparoDuplo/b
 import { set_paths, assets, base } from '/home/ospinhas/Desktop/WORK/ALGARVE/FARO/DisparoDuplo/backend/client/.svelte-kit/runtime/paths.js';
 import { set_prerendering } from '/home/ospinhas/Desktop/WORK/ALGARVE/FARO/DisparoDuplo/backend/client/.svelte-kit/runtime/env.js';
 
-const template = ({ head, body, assets, nonce }) => "<!DOCTYPE html>\n<html lang=\"en\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<link rel=\"icon\" href=\"" + assets + "/favicon.png\" />\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n\t\t" + head + "\n\t</head>\n\t<body>\n\t\t<div class=\"flex flex-col justify-between min-h-screen\">\n\t\t\t" + body + "\n\t\t</div>\n\t\t<script src=\"../node_modules/flowbite/dist/flowbite.js\"></script>\n\t\t<script src=\"../node_modules/flowbite/dist/datepicker.js\"></script>\n\t</body>\n</html>\n";
+const template = ({ head, body, assets, nonce }) => "<!DOCTYPE html>\n<html data-theme=\"cupcake\" lang=\"en\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<link rel=\"icon\" href=\"" + assets + "/favicon.png\" />\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n\t\t" + head + "\n\t</head>\n\t<body>\n\t\t<div class=\"flex flex-col justify-between min-h-screen\">\n\t\t\t" + body + "\n\t\t</div>\n\t\t<script src=\"../node_modules/flowbite/dist/flowbite.js\"></script>\n\t\t<script src=\"../node_modules/flowbite/dist/datepicker.js\"></script>\n\t</body>\n</html>\n";
 
 let read = null;
 
