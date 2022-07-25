@@ -22,6 +22,7 @@ const AlbumType = new GraphQLObjectType({
 		date: { type: GraphQLFloat },
 		location: { type: GraphQLString },
 		description: { type: GraphQLString },
+		password: { type: GraphQLString },
 		featured: {
 			type: MediaType,
 			resolve(parent, args) {
@@ -93,6 +94,7 @@ const mutation = new GraphQLObjectType({
 				date: { type: GraphQLNonNull(GraphQLFloat) },
 				location: { type: GraphQLNonNull(GraphQLString) },
 				description: { type: GraphQLNonNull(GraphQLString) },
+				password: { type: GraphQLNonNull(GraphQLString) },
 			},
 			resolve(parent, args) {
 				const album = new Album({
@@ -100,6 +102,7 @@ const mutation = new GraphQLObjectType({
 					date: args.date,
 					location: args.location,
 					description: args.description,
+					password: args.password,
 				});
 				return album.save();
 			},
@@ -112,6 +115,7 @@ const mutation = new GraphQLObjectType({
 				date: { type: GraphQLFloat },
 				location: { type: GraphQLString },
 				description: { type: GraphQLString },
+				password: { type: GraphQLString },
 			},
 			resolve(parent, args) {
 				const id = args.id;
