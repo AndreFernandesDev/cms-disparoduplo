@@ -61,6 +61,10 @@
 
 	// Store form in Database.
 	const handleSubmit = async () => {
+		if(closeFormLabel) {
+			closeFormLabel.click();
+		}
+
 		const formData = new FormData(form);
 		let json = Object.fromEntries(formData.entries());
 
@@ -73,10 +77,6 @@
 			description: json.description,
 			password: json.password,
 		};
-
-		if(closeFormLabel) {
-			closeFormLabel.click();
-		}
 
 		const res = await fetchData(mutation, variables);
 		let newAlbum = res.data.addAlbum;
