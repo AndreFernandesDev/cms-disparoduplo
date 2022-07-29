@@ -15,6 +15,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { storeMediaData } from '$lib/utilities/manageMedia';
 	import { toUnix } from '$lib/utilities/utilities';
+	import axios from 'axios';
 
 	let isButtonDisabled = true;
 
@@ -94,6 +95,11 @@
 		form.reset();
 		previewFiles = [];
 		featured = '';
+
+		axios
+			.post('https://api.netlify.com/build_hooks/62e468b2c29a8d10a253d446')
+			.then((data) => console.log(data))
+			.catch((error) => console.log(error));
 	};
 
 	// Check if there are any missing fields.

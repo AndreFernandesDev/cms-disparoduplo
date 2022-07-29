@@ -25,6 +25,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import Input from '$lib/components/inputs/Input.svelte';
 	import Modal from '$lib/components/Modal.svelte';
+	import axios from 'axios';
 
 	interface Album {
 		[key: string]: any;
@@ -139,6 +140,11 @@
 		initialAlbum = { ...album };
 
 		showUpdateBtn();
+
+		axios
+			.post('https://api.netlify.com/build_hooks/62e468b2c29a8d10a253d446')
+			.then((data) => console.log(data))
+			.catch((error) => console.log(error));
 	};
 
 	const handleDelete = async (id: string, path: string) => {
@@ -233,7 +239,7 @@
 					placeholder="Dia do evento..."
 				/>
 				<Button action="submit" type="Popup" display={displayUpdateBtn}
-					>Atualizar</Button
+					>Confirmar</Button
 				>
 			</div>
 			<!-- FEATURED IMAGE -->
