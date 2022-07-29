@@ -5,15 +5,21 @@
 	export let id: string;
 	export let image: string;
 
-	import { fromUnix } from "$lib/utilities/utilities";
+	import { fromUnix } from '$lib/utilities/utilities';
 </script>
 
 <div class="card bg-base-100 shadow-xl">
 	<a class="w-full" href="album/{id}">
-		<figure class="w-full"><img src={image} class="w-full h-56 object-cover" alt="Shoes" /></figure>
+		<figure class="w-full">
+			<img src={image} class="w-full h-56 object-cover" alt="Shoes" />
+		</figure>
 		<div class="card-body">
-			<h2 class="card-title">{name} | {fromUnix(date, "day", "-")}</h2>
-			<p>{description.slice(0, 30)}{description.length > 30 ? "...": ""}</p>
+			<h2 class="card-title">{name} | {fromUnix(date, 'day', '-')}</h2>
+			{#if description.length}
+				<p>{description.slice(0, 30)}{description.length > 30 ? '...' : ''}</p>
+			{:else}
+				<p class="text-slate-400">Sem descricao</p>
+			{/if}
 			<div class="card-actions justify-end mt-2">
 				<slot />
 			</div>
