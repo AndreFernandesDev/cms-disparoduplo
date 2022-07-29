@@ -18,6 +18,7 @@
 		id={name}
 		{name}
 		type="file"
+		accept="image/png, image/gif, image/jpeg"
 		multiple
 		bind:files
 		on:change={onChange}

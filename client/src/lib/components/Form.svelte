@@ -16,7 +16,7 @@
 	import { storeMediaData } from '$lib/utilities/manageMedia';
 	import { toUnix } from '$lib/utilities/utilities';
 
-	let isButtonEnabled = true;
+	let isButtonDisabled = true;
 
 	interface PreviewFile {
 		file: File;
@@ -101,9 +101,13 @@
 		const formData = new FormData(form);
 		let json = Object.fromEntries(formData.entries());
 
-		const isEmpty = Object.values(json).some((x) => x === null || x === '');
+		// Not required fields
+		delete json.description;
+		delete json.password;
 
-		isButtonEnabled = isEmpty;
+		let isEmpty = Object.values(json).some((x) => x === null || x === '');
+
+		isButtonDisabled = files.length ? isEmpty : true;
 	};
 
 	// Record featured image
@@ -131,7 +135,7 @@
 	<Input onChange={showFiles} bind:files type="file" name="media" />
 
 	<label bind:this={closeFormLabel} for="newAlbum" />
-	<Button action="submit" extraClass={isButtonEnabled ? 'btn-disabled' : ''}
+	<Button action="submit" extraClass={isButtonDisabled ? 'btn-disabled' : ''}
 		>Salvar</Button
 	>
 </form>
