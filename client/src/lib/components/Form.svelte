@@ -61,7 +61,7 @@
 
 	// Store form in Database.
 	const handleSubmit = async () => {
-		if(closeFormLabel) {
+		if (closeFormLabel) {
 			closeFormLabel.click();
 		}
 
@@ -74,8 +74,8 @@
 			name: json.name,
 			date: toUnix(String(json.date)),
 			location: json.location,
-			description: json.description,
-			password: json.password,
+			description: json.description ? json.description : '',
+			password: json.password ? json.password : '',
 		};
 
 		const res = await fetchData(mutation, variables);
@@ -119,16 +119,21 @@
 >
 	<Heading type="h2">New album</Heading>
 	<Input type="text" name="name" placeholder="Nome do evento..." />
-	<Input type="text" name="password" placeholder="Senha..." />
-	<Input type="textarea" name="description" placeholder="Sobre o evento..." />
+	<Input type="text" name="password" placeholder="Senha..." required={false} />
+	<Input
+		type="textarea"
+		name="description"
+		placeholder="Sobre o evento..."
+		required={false}
+	/>
 	<Input type="text" name="location" placeholder="Madeira..." />
 	<Input type="date" name="date" placeholder="Dia do evento..." />
 	<Input onChange={showFiles} bind:files type="file" name="media" />
 
-	<label bind:this={closeFormLabel} for="newAlbum"></label>
+	<label bind:this={closeFormLabel} for="newAlbum" />
 	<Button action="submit" extraClass={isButtonEnabled ? 'btn-disabled' : ''}
-		>Salvar</Button>
-	
+		>Salvar</Button
+	>
 </form>
 
 <div class="flex flex-wrap justify-between items-center mt-12">
