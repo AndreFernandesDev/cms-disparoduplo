@@ -3,24 +3,27 @@
     export let preview = true;
     export let name:string;
     export let files:FileList;
+    export let section = "";
+    export let options:string[] = [];
     export let onChange = () => {};
+    export let onClick = () => {};
 
     // Components
     import Image from '$lib/components/Image.svelte';
     import Modal from '$lib/components/Modal.svelte';
+    import Input from '$lib/components/inputs/Input.svelte';
 
     interface PreviewFile {
 		file: File,
 		blurb: string,
 		name: string,
-
+        section: string,
 	}
 
     $: (() => {
         renderFiles();
         console.log(files)
     })()
-
 
 
     let previewFiles:Array<PreviewFile> = [];
@@ -39,7 +42,7 @@
 			reader.readAsDataURL(currentFile);
 
 			reader.onload = e => {
-				previewFiles = [...previewFiles, {file: currentFile, blurb: String(e.target ? e.target.result : ""), name: currentFile.name}];
+				previewFiles = [...previewFiles, {file: currentFile, blurb: String(e.target ? e.target.result : ""), name: currentFile.name, section: section}];
 			}
 		})
 	}
@@ -50,7 +53,7 @@
 			name: name
 		}
 	}
-
+    
 </script>
 
 <div class="w-full">
@@ -72,13 +75,14 @@
     />
 </div>
 {#if preview && files.length}
+    <!-- SECTION -->
     <section class="flex flex-wrap w-full gap-8 mt-12">
         <!-- Preview Image FullScreen -->
         <Modal type="click" id="newImgPreview" extraClass="bg-black">
 				<img for="my-modal" src={activeImg.path} alt={activeImg.name} class="modal-button w-full h-full object-contain rounded-md"/>
         </Modal>
         {#each previewFiles as media}
-            <Image modalId="newImgPreview" onClick={() => handleImagePreview(media.blurb, media.name)} path={media.blurb} name={media.name} featured={true} />
+            <Image modalId="newImgPreview" section={false} onClick={() => handleImagePreview(media.blurb, media.name)} path={media.blurb} name={media.name} featured={true} />
         {/each}
     </section>
 {/if}

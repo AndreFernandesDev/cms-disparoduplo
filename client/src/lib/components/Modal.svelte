@@ -1,5 +1,6 @@
 <script lang="ts">
     export let id:string;
+    export let opened = false;
     export let type = "clickOutside";
     export let button = "";
     export let extraClass = "";
@@ -13,7 +14,7 @@
 
 {#if type == "clickOutside"}
     <input type="checkbox" id={id} class="modal-toggle" />
-    <label for={id} class="modal cursor-pointer">
+    <label for={id} class="modal cursor-pointer {opened ? "modal-open" : ""}">
         <label class="modal-box m-24 p-0 w-3/5 max-w-full relative {extraClass}" for="">
             <div class="p-6">
                 <slot />
@@ -22,7 +23,7 @@
     </label>
 {:else if type == "click"}
     <input type="checkbox" id={id} class="modal-toggle" />
-    <label for={id} class="modal cursor-pointer">
+    <label for={id} class="modal cursor-pointer {opened ? "modal-open" : ""}">
         <div class="modal-box m-24 p-0 w-full max-w-full h-screen {extraClass}">
             <slot />
         </div>

@@ -16,6 +16,7 @@
 	import AlbumCard from '$lib/components/AlbumCard.svelte';
 	import Heading from '$lib/components/Heading.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import axios from 'axios';
 
 	onMount(async () => {
 		const res = await fetchData(query(Query.all), {});
@@ -34,6 +35,11 @@
 		// Update internal data
 		const updatedAlbums = $albums.filter((item) => item.id !== id);
 		albums.set(updatedAlbums);
+
+		axios
+			.post('https://api.netlify.com/build_hooks/62e468b2c29a8d10a253d446')
+			.then((data) => console.log(data))
+			.catch((error) => console.log(error));
 	};
 </script>
 

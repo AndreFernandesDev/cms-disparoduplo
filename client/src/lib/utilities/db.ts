@@ -1,4 +1,5 @@
-const url = 'https://disparoduplo-cms-jxq6jwbz6a-nw.a.run.app/graphql';
+// const url = 'http://localhost:5000/graphql'; // DEV
+const url = 'https://disparoduplo-cms-jxq6jwbz6a-nw.a.run.app/graphql'; // PROD
 
 const config = (query: string, variables: object) => {
 	return {
@@ -44,12 +45,14 @@ export const query = (type: Query, props: QueryProps = {}) => {
 					featured {
 						id
 						path
+						section
 					}
 					media {
 						id
 						name
 						type
 						path
+						section
 						featured
 					}
 				}
@@ -85,6 +88,7 @@ export enum MutationActions {
 	add = 'add',
 	delete = 'delete',
 	update = 'update',
+	updateSection = 'updateSection',
 }
 
 export const mutations = (type: MutationTypes, action: MutationActions) => {
@@ -157,6 +161,7 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 					$name: String!
 					$type: String!
 					$path: String!
+					$section: String!
 				) {
 					addMedia(
 						featured: $featured
@@ -164,12 +169,14 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 						name: $name
 						type: $type
 						path: $path
+						section: $section
 					) {
 						id
 						name
 						type
 						path
 						featured
+						section
 					}
 				}
 			`,
@@ -191,6 +198,20 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 						oldFeaturedId: $oldFeaturedId
 					) {
 						id
+					}
+				}
+			`,
+			updateSection: `
+				mutation (
+					$id: ID!
+					$section: String!
+				) {
+					updateMediaSection(
+						id: $id
+						section: $section
+					) {
+						id
+						section
 					}
 				}
 			`,

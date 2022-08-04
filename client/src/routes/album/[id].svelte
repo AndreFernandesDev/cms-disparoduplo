@@ -12,6 +12,9 @@
 		deleteMedia,
 		storeMediaData,
 		updateFeatured,
+		getSections,
+		groupMedia,
+		checkMediaSection
 	} from '$lib/utilities/manageMedia';
 	import { onMount } from 'svelte';
 
@@ -26,6 +29,7 @@
 	import Input from '$lib/components/inputs/Input.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import axios from 'axios';
+import { init } from 'svelte/internal';
 
 	interface Album {
 		[key: string]: any;
@@ -37,10 +41,17 @@
 
 	let form: HTMLFormElement;
 	let files: FileList;
+	$: filesSection = "";
 	const id = $page.params.id;
 	let toDeleteMedia: Media = [];
 	let toFeaturedMedia = { id: '', oldFeaturedId: '' };
 	let displayUpdateBtn = false;
+	let displaySectionModal = false;
+	let displayImageSectionModal = false;
+	$: imageOnEditIndex = "";
+	let sections:Array<string> = [];
+	$: mediaBySection = {};
+
 	let initialAlbum = {};
 	let activeImg = {
 		path: '',
@@ -54,11 +65,13 @@
 		date: 0,
 		featured: {
 			path: '',
+			section: '',
 		},
 		media: [
 			{
 				path: '',
 				name: '',
+				section: '',
 			},
 		],
 	};
@@ -69,8 +82,13 @@
 			albums.set(res.data.albums);
 		}
 		album = $albums.filter((item: Album) => item.id === id)[0];
-		initialAlbum = { ...album };
+		initialAlbum = { ...album, media: [...album.media] };
+
+		sections = getSections(album.media);
+		mediaBySection = groupMedia(album.media);
 	});
+
+
 
 	const showUpdateBtn = () => {
 		if (!isEqual(album, initialAlbum) || files.length) {
@@ -84,7 +102,6 @@
 		const target = e.target as HTMLInputElement;
 		const key = String(target.name);
 		const value: string | number = target.value;
-
 		album[key] = value;
 
 		showUpdateBtn();
@@ -118,17 +135,21 @@
 		// ---
 		// Add
 		if (files.length) {
-			const newMedia = await storeMediaData(id, files);
+			const newMedia = await storeMediaData(id, files, '', filesSection);
 			album.media = [...album.media, ...newMedia];
 		}
 		// Delete
 		if (toDeleteMedia.length) {
 			await deleteMedia(id, toDeleteMedia);
 		}
-		// Update
+		// Update Featured
 		if (toFeaturedMedia.id && toFeaturedMedia.oldFeaturedId) {
 			await updateFeatured(toFeaturedMedia.id, toFeaturedMedia.oldFeaturedId);
 		}
+
+		// Update Section
+		checkMediaSection(album.media, initialAlbum.media);
+		
 
 		// Reset all internal variables and fields
 		files = [];
@@ -139,8 +160,13 @@
 
 		initialAlbum = { ...album };
 
+		sections = getSections(album.media);
+		mediaBySection = groupMedia(album.media);
+		filesSection = "";
+
 		showUpdateBtn();
 
+		// Update Landing Page
 		axios
 			.post('https://api.netlify.com/build_hooks/62e468b2c29a8d10a253d446')
 			.then((data) => console.log(data))
@@ -182,25 +208,89 @@
 
 		showUpdateBtn();
 	};
+
+	// Open Section Modal for new images.
+	const handleFiles = () => {
+		displaySectionModal = true;
+		showUpdateBtn();
+	}
+
+	// Record changes made on new images section.
+	const handleFilesSection = (value: string, updatedSections: string[]) => {
+		sections = updatedSections;
+		files = files;
+		filesSection = value;
+		displaySectionModal = false;
+	}
+
+	// Record changes made on section of image
+	const handleUpdateSection = (value: string, updatedSections: string[]) => {
+		displayImageSectionModal = true;
+		sections = updatedSections;
+		album.media = album.media.map((media: Media, index: string) => index == imageOnEditIndex ? {...media, section: value} : media);
+		displayImageSectionModal = false;
+
+		sections = getSections(album.media);
+		mediaBySection = groupMedia(album.media);
+
+		showUpdateBtn();
+	}
+
+	// Open Section Modal per Image
+	const handleImageModal = (fileId: string) => {
+		for (let i = 0; i < album.media.length; i++) {
+			const media = album.media[i];
+			if(media.id === fileId) {
+				imageOnEditIndex = String(i);
+			}
+			
+		}
+
+		displayImageSectionModal= true;
+	}
+
 </script>
 
 {#if album}
-	<!-- BUTTONS PANEL -->
+	<!-- SECTION MODAL FOR NEW IMAGES -->
+	<Modal id="selectSection" opened={displaySectionModal}>
+		<div class="flex flex-col">
+			<h2 class="text-xl mb-3">Escolha uma divisao para as suas novas fotos</h2>
+			<form class="flex flex-col w-full">
+				<Input type="select" name="sectionSelector" options={sections} selected={filesSection} placeholder="Escolha uma divisao" label="Divisoes disponiveis" onClick={handleFilesSection} />
+			</form>
+		</div>
+	</Modal>	
+
 	<form
 		class="w-full"
 		bind:this={form}
 		on:submit|preventDefault={handleSubmit}
 		on:change={handleFormChange}
 	>
+		<!-- NEW MEDIA UPLOAD -->
 		<section class="flex flex-wrap items-stretch w-full mt-6">
 			<Heading type="h1">Adicionar multimedia</Heading>
 			<Input
-				onChange={showUpdateBtn}
+				onChange={handleFiles}
+				options={sections}
+				selected={filesSection}
 				bind:files
 				type="filePreview"
 				name="newMediaUpload"
 			/>
+
+			<!-- FILES SECTION -->
+			{#if filesSection.length}
+				<div class="w-2/4 flex flex-col mt-12">
+					<h2 class="text-xl">Divisao das novas fotos</h2>
+					<form class="flex flex-col w-full">
+						<Input type="select" name="sectionSelector" options={sections} selected={filesSection} placeholder="Escolha uma divisao" onClick={handleFilesSection} />
+					</form>
+				</div>
+			{/if}
 		</section>
+
 		<!-- SETTINGS -->
 		<section class="flex flex-wrap items-stretch w-full ">
 			<Heading type="h1">Alterar album</Heading>
@@ -249,12 +339,16 @@
 				class="w-2/5 h-96 object-cover rounded-md"
 			/>
 		</section>
+
 	</form>
 
 	<!-- MEDIA -->
 	<section class="flex flex-wrap w-full">
 		<Heading type="h1">Fotos & Videos</Heading>
+
 		{#if album.media && album.media.length}
+
+			<!-- SHOW IMAGE FULL SCREEN -->
 			<Modal type="click" id="fullImg" extraClass="bg-black">
 				<img
 					for="my-modal"
@@ -263,28 +357,46 @@
 					class="modal-button w-full h-full object-contain rounded-md"
 				/>
 			</Modal>
-			<Image
-				modalId="fullImg"
-				onClickDelete={() =>
-					handleDelete(album.featured.id, album.featured.path)}
-				onClick={() =>
-					handleImagePreview(album.featured.path, album.featured.name)}
-				featured={true}
-				path={album.featured.path}
-				name={album.featured.name}
-			/>
-			{#each album.media as file}
-				{#if file.featured === false}
-					<Image
-						modalId="fullImg"
-						onClickFeatured={() => handleFeatured(file.id, file.path)}
-						onClickDelete={() => handleDelete(file.id, file.path)}
-						onClick={() => handleImagePreview(file.path, file.name)}
-						featured={false}
-						path={file.path}
-						name={file.name}
-					/>
-				{/if}
+
+			<!-- SHOW SECTION MODAL PER IMAGE -->
+			<Modal id="selectSectionImage" opened={displayImageSectionModal}>
+				<label for="selectSectionImage" class="btn btn-sm btn-circle absolute right-2 top-2" on:click={(e) => {displayImageSectionModal = false; e.target.click()}}>✕</label>
+				<div class="flex flex-col">
+					<h2 class="text-xl mb-3">Altera a divisao da foto</h2>
+					<form class="flex flex-col w-full">
+						<Input type="select" name="sectionSelector" options={sections} selected={imageOnEditIndex ? album.media[imageOnEditIndex].section : ""} label="Divisoes disponiveis" onClick={handleUpdateSection} />
+					</form>
+				</div>
+			</Modal>
+
+			<!-- SHOW IMAGES PER SECTION -->
+			{#each Object.keys(mediaBySection) as albumName}
+				<Heading type="h1">{albumName}</Heading>
+				{#each mediaBySection[albumName] as file}
+					{#if file.featured === false || toFeaturedMedia.id !== file.id}
+						<Image
+							modalId="fullImg"
+							onClickFeatured={() => handleFeatured(file.id, file.path)}
+							onClickDelete={() => handleDelete(file.id, file.path)}
+							onClick={() => handleImagePreview(file.path, file.name)}
+							onClickSection={() => handleImageModal(file.id)}
+							featured={false}
+							path={file.path}
+							name={file.name}
+						/>
+					{:else}
+						<Image
+							modalId="fullImg"
+							onClickFeatured={() => handleFeatured(file.id, file.path)}
+							onClickDelete={() => handleDelete(file.id, file.path)}
+							onClick={() => handleImagePreview(file.path, file.name)}
+							onClickSection={() => handleImageModal(file.id)}
+							featured={true}
+							path={file.path}
+							name={file.name}
+						/>
+					{/if}
+				{/each}
 			{/each}
 		{/if}
 	</section>

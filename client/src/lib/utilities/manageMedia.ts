@@ -4,6 +4,10 @@ import albumStore from '$lib/stores/albums';
 import { fetchData, MutationActions, mutations, MutationTypes } from './db';
 import axios from 'axios';
 
+interface Media {
+	[key: string]: any;
+}
+
 function uuidv4() {
 	return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
 		(
@@ -41,7 +45,8 @@ const storeFileCloud = async (file: File) => {
 export const storeMediaData = async (
 	albumId: string,
 	files: FileList,
-	featured = ''
+	featured = '',
+	sectionName = 'general'
 ) => {
 	if (!files.length) return [];
 	let newMedia = [];
@@ -55,9 +60,11 @@ export const storeMediaData = async (
 			albumId: albumId,
 			name: file.name ? file.name : '',
 			type: file.type,
+			section: sectionName,
 			path: storagedFilePath,
 		};
 
+		console.log(sectionName);
 		const res = await fetchData(mutation, variables);
 		console.log(res);
 		newMedia.push(res.data.addMedia);
@@ -107,4 +114,79 @@ export const updateFeatured = async (
 
 	const res = await fetchData(mutation, variables);
 	return res;
+};
+
+const updateSection = async (mediaId: string, section: string) => {
+	if (!mediaId || !section) return null;
+
+	// API Parameters
+	const mutation = mutations(
+		MutationTypes.media,
+		MutationActions.updateSection
+	);
+	const variables = {
+		id: mediaId,
+		section: section,
+	};
+
+	const res = await fetchData(mutation, variables);
+	return res;
+};
+
+export const checkMediaSection = async (
+	media: Media[],
+	initialMedia: Media[]
+) => {
+	if (!media || !initialMedia) return null;
+
+	for (let i = 0; i < media.length; i++) {
+		const file = media[i];
+		const mediaSection = file.section;
+		const initialSection = getMedia(file.id, initialMedia);
+		if (initialSection) {
+			if (mediaSection != initialSection.section) {
+				console.log(mediaSection, initialSection);
+				console.log(await updateSection(file.id, mediaSection));
+			}
+		}
+	}
+};
+
+const getMedia = (id: string, mediaCollection: Media[]) => {
+	const media = mediaCollection.filter((file) => file.id === id);
+	return media[0];
+};
+
+export const getSections = (mediaCollection: Media[]) => {
+	if (!mediaCollection.length) {
+		return [];
+	}
+
+	let updatedSections: string[] = [];
+	for (let i = 0; i < mediaCollection.length; i++) {
+		let media = mediaCollection[i];
+		if (!updatedSections.includes(media.section)) {
+			updatedSections.push(media.section);
+		}
+	}
+
+	return updatedSections;
+};
+
+export const groupMedia = (mediaCollection: Media[]) => {
+	if (!mediaCollection.length) {
+		return [];
+	}
+
+	let groupedSections: Media = {};
+	for (let i = 0; i < mediaCollection.length; i++) {
+		let media = mediaCollection[i];
+		if (!groupedSections[media.section]) {
+			groupedSections[media.section] = [media];
+		} else {
+			groupedSections[media.section].push(media);
+		}
+	}
+
+	return groupedSections;
 };

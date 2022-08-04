@@ -17,7 +17,7 @@
 		>
 	{/if}
 	<input
-		on:change={onChange}
+		on:keyup={onChange}
 		type="text"
 		{value}
 		{name}

@@ -81,7 +81,7 @@
 
 		const res = await fetchData(mutation, variables);
 		let newAlbum = res.data.addAlbum;
-		let newMedia = await storeMediaData(newAlbum.id, files, featured);
+		let newMedia = await storeMediaData(newAlbum.id, files, featured, json.section);
 		const featuredMedia = newMedia.filter((item) => item.featured === true)[0];
 
 		newAlbum = {
@@ -120,6 +120,7 @@
 	const storeFeatured = (imgName: string) => {
 		featured = imgName ? imgName : '';
 	};
+
 </script>
 
 <form
@@ -139,12 +140,15 @@
 	<Input type="text" name="location" placeholder="Madeira..." />
 	<Input type="date" name="date" placeholder="Dia do evento..." />
 	<Input onChange={showFiles} bind:files type="file" name="media" />
+	<Input type="text" name="section" placeholder="Divisao das fotos..." />
 
 	<label bind:this={closeFormLabel} for="newAlbum" />
 	<Button action="submit" extraClass={isButtonDisabled ? 'btn-disabled' : ''}
 		>Salvar</Button
 	>
 </form>
+
+
 
 <div class="flex flex-wrap justify-between items-center mt-12">
 	{#each previewFiles as media, index}
