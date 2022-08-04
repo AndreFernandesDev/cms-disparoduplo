@@ -1,23 +1,18 @@
 {
-	"name": "backend",
+	"name": "DisparoDuploCMS",
+	"description": "Backend of a Media Album",
 	"version": "1.0.0",
-	"description": "",
+	"private": true,
 	"main": "index.js",
 	"scripts": {
-		"start": "node server/index.js",
-		"dev": "nodemon server/index.js"
+		"start": "node index.js",
+		"dev": "nodemon index.js"
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/Azure-Samples/storage-blob-upload-from-webapp-node.git"
+	"engines": {
+		"node": ">=12.0.0"
 	},
-	"keywords": [],
-	"author": "",
+	"author": "Andre Fernandes",
 	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/Azure-Samples/storage-blob-upload-from-webapp-node/issues"
-	},
-	"homepage": "https://github.com/Azure-Samples/storage-blob-upload-from-webapp-node#readme",
 	"dependencies": {
 		"colors": "^1.4.0",
 		"cors": "^2.8.5",

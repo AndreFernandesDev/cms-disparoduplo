@@ -13,6 +13,9 @@ const MediaSchema = new mongoose.Schema({
 	featured: {
 		type: Boolean,
 	},
+	section: {
+		type: String,
+	},
 	albumId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Album',

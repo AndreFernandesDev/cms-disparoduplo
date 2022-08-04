@@ -47,6 +47,7 @@ const MediaType = new GraphQLObjectType({
 		type: { type: GraphQLString },
 		path: { type: GraphQLString },
 		featured: { type: GraphQLBoolean },
+		section: { type: GraphQLString },
 		albumId: { type: GraphQLString },
 	}),
 });
@@ -129,7 +130,7 @@ const mutation = new GraphQLObjectType({
 			args: { id: { type: GraphQLID } },
 			resolve(parent, args) {
 				Media.find({ albumId: args.id }).remove().exec();
-				return Album.findByIdAndRemove(args.id);
+				return Album.findByIdAndDelete(args.id);
 			},
 		},
 		// Add a new media
@@ -140,6 +141,7 @@ const mutation = new GraphQLObjectType({
 				type: { type: GraphQLNonNull(GraphQLString) },
 				path: { type: GraphQLNonNull(GraphQLString) },
 				featured: { type: GraphQLNonNull(GraphQLBoolean) },
+				section: { type: GraphQLNonNull(GraphQLString) },
 				albumId: { type: GraphQLNonNull(GraphQLString) },
 			},
 			resolve(parent, args) {
@@ -148,6 +150,7 @@ const mutation = new GraphQLObjectType({
 					type: args.type,
 					path: args.path,
 					featured: args.featured,
+					section: args.section,
 					albumId: args.albumId,
 				});
 				return album.save();
@@ -170,6 +173,18 @@ const mutation = new GraphQLObjectType({
 			resolve: async (parent, args) => {
 				await Media.findByIdAndUpdate(args.oldFeaturedId, { featured: false });
 				return await Media.findByIdAndUpdate(args.id, { featured: true });
+			},
+		},
+		updateMediaSection: {
+			type: MediaType,
+			args: {
+				id: { type: GraphQLID },
+				section: { type: GraphQLString },
+			},
+			resolve: async (parent, args) => {
+				return await Media.findByIdAndUpdate(args.id, {
+					section: args.section,
+				});
 			},
 		},
 	},
