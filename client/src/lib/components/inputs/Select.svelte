@@ -41,6 +41,8 @@ import Input from "./Input.svelte";
         onClick(selected, currentOptions);
     }
 
+    console.log(selected)
+
 </script>
 
 <div class="relative z-0 w-full my-4 group">
@@ -66,20 +68,22 @@ import Input from "./Input.svelte";
             >
         {/if}
         <select class="select select-bordered w-full" on:change={handleSelect} required={required}>
-            {#if !selected.length}
+            {#if !selected || !selected.length || selected == null}
                 <option disabled selected>{placeholder}</option>
             {/if}
             {#each currentOptions as opt}
-                {#if selected === opt}
-                    <option value={opt} name={opt} selected>{opt}</option>
-                {:else}
-                    <option value={opt} name={opt}>{opt}</option>
+                {#if opt !== null}
+                    {#if selected === opt}
+                        <option value={opt} name={opt} selected>{opt}</option>
+                    {:else}
+                        <option value={opt} name={opt}>{opt}</option>
+                    {/if}    
                 {/if}
             {/each}
         </select>
         <div class="mt-6 w-full flex justify-between">
             <Button extraClass="btn-secondary text-xs" onClick={handleView}>Adicionar nova opcao</Button>
-            <Button extraClass="text-xs {selected.length ? "" : "btn-disabled"}" onClick={handleClick}>Confirmar</Button>
+            <Button extraClass="text-xs {selected ? selected.length ? "" : "btn-disabled" : "btn-disabled"}" onClick={handleClick}>Confirmar</Button>
         </div>
     {/if}
 

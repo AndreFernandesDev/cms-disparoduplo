@@ -133,6 +133,7 @@ const updateSection = async (mediaId: string, section: string) => {
 	return res;
 };
 
+// Media Sections Functions
 export const checkMediaSection = async (
 	media: Media[],
 	initialMedia: Media[]
@@ -189,4 +190,30 @@ export const groupMedia = (mediaCollection: Media[]) => {
 	}
 
 	return groupedSections;
+};
+
+// Album Position Update
+const updateAlbumPosition = async (mediaId: string, position: number) => {
+	if (!mediaId || !position) return null;
+
+	// API Parameters
+	const mutation = mutations(MutationTypes.album, MutationActions.updateOrder);
+	const variables = {
+		id: mediaId,
+		position: position,
+	};
+
+	const res = await fetchData(mutation, variables);
+	return res;
+};
+
+export const updateAlbumOrder = async (albumCollection: any[]) => {
+	if (!albumCollection.length) {
+		return [];
+	}
+
+	for (let i = 0; i < albumCollection.length; i++) {
+		const album = albumCollection[i];
+		await updateAlbumPosition(album.id, i + 1);
+	}
 };

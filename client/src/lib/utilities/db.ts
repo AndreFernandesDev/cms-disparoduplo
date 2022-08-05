@@ -89,6 +89,7 @@ export enum MutationActions {
 	delete = 'delete',
 	update = 'update',
 	updateSection = 'updateSection',
+	updateOrder = 'updateOrder',
 }
 
 export const mutations = (type: MutationTypes, action: MutationActions) => {
@@ -130,7 +131,7 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 				mutation (
 					$id: ID!
 					$name: String!
-					$date: Float!
+					$date: Int!
 					$location: String!
 					$description: String!
 					$password: String!
@@ -149,6 +150,21 @@ export const mutations = (type: MutationTypes, action: MutationActions) => {
 						location
 						description
 						password
+					}
+				}
+			`,
+			updateOrder: `
+				mutation (
+					$id: ID!
+					$position: Int!
+				) {
+					updateAlbumOrder(
+						id: $id
+						position: $position
+					) {
+						id
+						position
+						name
 					}
 				}
 			`,

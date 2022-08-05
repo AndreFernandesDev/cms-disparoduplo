@@ -364,7 +364,7 @@ import { init } from 'svelte/internal';
 				<div class="flex flex-col">
 					<h2 class="text-xl mb-3">Altera a divisao da foto</h2>
 					<form class="flex flex-col w-full">
-						<Input type="select" name="sectionSelector" options={sections} selected={imageOnEditIndex ? album.media[imageOnEditIndex].section : ""} label="Divisoes disponiveis" onClick={handleUpdateSection} />
+						<Input type="select" name="sectionSelector" placeholder="Escolhe uma divisao" options={sections} selected={imageOnEditIndex ? album.media[imageOnEditIndex].section === null ? "" : album.media[imageOnEditIndex].section : ""} label="Divisoes disponiveis" onClick={handleUpdateSection} />
 					</form>
 				</div>
 			</Modal>

@@ -50,3 +50,24 @@ export const isEqual = (obj1: object, obj2: object) => {
 function isObject(object: object) {
 	return object != null && typeof object === 'object';
 }
+
+export const updateArray = (newArray: any[], arrayToUpdate: any[]) => {
+	if (!newArray.length || !arrayToUpdate.length) return [];
+
+	for (let i = 0; i < newArray.length; i++) {
+		const album = newArray[i];
+		let exists = false;
+		for (let x = 0; x < arrayToUpdate.length; x++) {
+			const initiaAlbum = arrayToUpdate[x];
+			if (album.id === initiaAlbum.id) {
+				exists = true;
+			}
+		}
+
+		if (exists == false) {
+			arrayToUpdate.push(album);
+		}
+	}
+
+	return arrayToUpdate;
+};
