@@ -11,6 +11,7 @@ const {
 	GraphQLNonNull,
 	GraphQLFloat,
 	GraphQLBoolean,
+	GraphQLInt,
 } = require('graphql');
 
 // Album Type
@@ -23,6 +24,7 @@ const AlbumType = new GraphQLObjectType({
 		location: { type: GraphQLString },
 		description: { type: GraphQLString },
 		password: { type: GraphQLString },
+		position: { type: GraphQLInt },
 		featured: {
 			type: MediaType,
 			resolve(parent, args) {
@@ -58,7 +60,7 @@ const RootQuery = new GraphQLObjectType({
 		albums: {
 			type: new GraphQLList(AlbumType),
 			resolve(parent, args) {
-				return Album.find();
+				return Album.find().sort('position');
 			},
 		},
 		album: {
@@ -122,6 +124,18 @@ const mutation = new GraphQLObjectType({
 				const id = args.id;
 				delete args.id;
 				return Album.findByIdAndUpdate(id, args);
+			},
+		},
+		updateAlbumOrder: {
+			type: AlbumType,
+			args: {
+				id: { type: GraphQLID },
+				position: { type: GraphQLInt },
+			},
+			resolve: async (parent, args) => {
+				return await Album.findByIdAndUpdate(args.id, {
+					position: args.position,
+				});
 			},
 		},
 		// Remove album

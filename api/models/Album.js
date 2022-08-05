@@ -16,6 +16,9 @@ const AlbumSchema = new mongoose.Schema({
 	password: {
 		type: String,
 	},
+	position: {
+		type: Number,
+	},
 });
 
 module.exports = mongoose.model('Album', AlbumSchema);
