@@ -151,6 +151,7 @@
 				<select
 					class="select select-bordered"
 					bind:value={position}
+					on:click|preventDefault
 					on:change|preventDefault={handleSelect}
 				>
 					{#each list as album, index}
@@ -179,7 +180,7 @@
 		action="submit"
 		onClick={handleRevert}
 		type="Popup"
-		extraClass="right-44 btn-secondary"
+		extraClass="right-40 btn-secondary"
 		display={displayUpdateBtn}>Reverter</Button
 	>
 </section>
