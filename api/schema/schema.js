@@ -99,13 +99,16 @@ const mutation = new GraphQLObjectType({
 				description: { type: GraphQLNonNull(GraphQLString) },
 				password: { type: GraphQLNonNull(GraphQLString) },
 			},
-			resolve(parent, args) {
+			resolve: async (parent, args) => {
+				const albums = await Album.find();
+				console.log(albums);
 				const album = new Album({
 					name: args.name,
 					date: args.date,
 					location: args.location,
 					description: args.description,
 					password: args.password,
+					position: albums.length + 1,
 				});
 				return album.save();
 			},
