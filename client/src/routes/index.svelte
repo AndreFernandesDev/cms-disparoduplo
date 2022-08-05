@@ -29,17 +29,16 @@
 	onMount(async () => {
 		const res = await fetchData(query(Query.all), {});
 		albums.set(res.data.albums);
-		initiaList = [ ...$albums ];
+		initiaList = [...$albums];
 		list = $albums;
 	});
 
 	// Update internal data in case new album is created.
 	$: {
-		if($albums.length > initiaList.length) {
+		if ($albums.length > initiaList.length) {
 			initiaList = updateArray($albums, initiaList);
 			list = updateArray($albums, list);
 		}
-
 	}
 
 	const showUpdateBtn = () => {
@@ -47,19 +46,19 @@
 
 		// Check if albums list has changed.
 		for (let i = 0; i < list.length; i++) {
-			if(list[i].name !== initiaList[i].name) {
+			if (list[i].name !== initiaList[i].name) {
 				displayUpdateBtn = true;
 			}
 		}
 
 		// Check if there are albums to delete.
-		if(toDeleteAlbums.length) {
+		if (toDeleteAlbums.length) {
 			displayUpdateBtn = true;
 		}
 	};
 
 	const deleteAlbumsInList = async () => {
-		if(!toDeleteAlbums.length) return null;
+		if (!toDeleteAlbums.length) return null;
 
 		for (let i = 0; i < toDeleteAlbums.length; i++) {
 			const albumId = toDeleteAlbums[i];
@@ -70,11 +69,11 @@
 			.post('https://api.netlify.com/build_hooks/62e468b2c29a8d10a253d446')
 			.then((data) => console.log(data))
 			.catch((error) => console.log(error));
-	}
+	};
 	const deleteAlbum = async (id: string) => {
 		// Delete Media from Google and Atlas
 		const deletedAlbum = $albums.filter((item) => item.id === id)[0];
-		if(deletedAlbum.media) {
+		if (deletedAlbum.media) {
 			const mediaRes = await deleteMedia(id, deletedAlbum.media);
 		}
 
@@ -89,13 +88,12 @@
 		// Update internal data
 		// const updatedAlbums = $albums.filter((item) => item.id !== id);
 		// albums.set(updatedAlbums);
-	}
-
+	};
 
 	const handleDelete = (id: string) => {
 		toDeleteAlbums.push(id);
 
-		list = list.filter(album => album.id != id);
+		list = list.filter((album) => album.id != id);
 		showUpdateBtn();
 	};
 
@@ -106,29 +104,32 @@
 
 		list = list;
 		showUpdateBtn();
-    }
+	};
 
 	const handleRevert = () => {
 		toDeleteAlbums = [];
-		list = [ ...initiaList ];
+		list = [...initiaList];
 		showUpdateBtn();
-	}
+	};
 
 	const handleSubmit = async () => {
 		// Reset internal data.
 		toDeleteAlbums = [];
-		list = [ ...list ];
-		initiaList = [ ...list ];
-		$albums = [ ...list ];
+		list = [...list];
+		initiaList = [...list];
+		$albums = [...list];
 
-		showUpdateBtn()
+		showUpdateBtn();
 
 		await deleteAlbumsInList();
 		await updateAlbumOrder(list);
 
-
-	}
-	
+		// Update Landing Page
+		axios
+			.post('https://api.netlify.com/build_hooks/62e468b2c29a8d10a253d446')
+			.then((data) => console.log(data))
+			.catch((error) => console.log(error));
+	};
 </script>
 
 <svelte:head>
@@ -147,13 +148,18 @@
 				{date}
 				{description}
 			>
-
-				<select class="select select-bordered" bind:value={position} on:change|preventDefault={handleSelect}>
+				<select
+					class="select select-bordered"
+					bind:value={position}
+					on:change|preventDefault={handleSelect}
+				>
 					{#each list as album, index}
 						{#if position === index}
 							<option value={position}>{position + 1}</option>
 						{:else}
-							<option value={JSON.stringify({index: position, new: index})}>{index + 1}</option>
+							<option value={JSON.stringify({ index: position, new: index })}
+								>{index + 1}</option
+							>
 						{/if}
 					{/each}
 				</select>
@@ -163,8 +169,17 @@
 		{/each}
 	</div>
 
-	<Button action="submit" onClick={handleSubmit} type="Popup" display={displayUpdateBtn}
-					>Confirmar</Button>
-					<Button action="submit" onClick={handleRevert} type="Popup" extraClass="right-44 btn-secondary" display={displayUpdateBtn}
-					>Reverter</Button>
+	<Button
+		action="submit"
+		onClick={handleSubmit}
+		type="Popup"
+		display={displayUpdateBtn}>Confirmar</Button
+	>
+	<Button
+		action="submit"
+		onClick={handleRevert}
+		type="Popup"
+		extraClass="right-44 btn-secondary"
+		display={displayUpdateBtn}>Reverter</Button
+	>
 </section>
